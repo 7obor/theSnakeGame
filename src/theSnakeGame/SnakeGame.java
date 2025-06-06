@@ -42,7 +42,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 	// ITEMS, PLAYER, AND ORIENTATION
 	int[] xPos, yPos;
 	int dir = 2;
-	int bodyLength = 40;
+	int bodyLength = 10;
 	int score = 0;
 
 	// GAME MECHANAICS
@@ -52,12 +52,6 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 	Image cursorImage, backgroundImage, appleImage, bombImage, powerUpImage;
 	BufferedImage [] snakeHeadPic, snakeBodyPic, snakeTailPic;
 	static BufferedImage snakeImage;
-
-	// For drawing images offScreen (prevents Flicker)
-	// These variables keep track of an off screen image object and
-//	// its corresponding graphics object
-//	Image offScreenImage;
-//	Graphics offScreenBuffer;
 
 	int gameOver = 0; // 0 shows that game is not over, 1 means game is over, if game over is 2 that means we are at main menu, we will implement this further down the line
 
@@ -117,7 +111,7 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 		if (gameOver == 0) {
 			move();
 //			checkApple();
-//			checkCollision();
+			checkCollision();
 		}
 		repaint();
 	}
@@ -127,6 +121,15 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 		gameOver = 0;
 		timer = new Timer(delay, this);
 		timer.start();
+	}
+	
+	public void checkCollision() {
+		
+		for (int i = bodyLength - 1; i < 0; i--)
+			if (xPos[0] == xPos[i] && yPos[0] == yPos[i]) {
+				gameOver = 1;
+				System.exit(1);
+			}
 	}
 
 	// KeyListener methods
@@ -251,26 +254,28 @@ public class SnakeGame extends JPanel implements ActionListener, KeyListener {
 	}
 
 	public void move() {
-		for (int i = bodyLength; i > 0; i--) {
-			xPos[i] = xPos[i - 1];
-			yPos[i] = yPos[i - 1];
-
-			System.out.println("xPos at " + i + ": " + xPos[i] + " yPos at " + i + ": " + yPos[i]);
-		}
-
-		switch (dir) {
-		case 1:
-			yPos[0] = yPos[0] - SQUARE_SIZE;
-			break;
-		case 2:
-			xPos[0] = xPos[0] + SQUARE_SIZE;
-			break;
-		case 3:
-			yPos[0] = yPos[0] + SQUARE_SIZE;
-			break;
-		case 4:
-			xPos[0] = xPos[0] - SQUARE_SIZE;
-			break;
+		if (gameOver == 0 ) {
+			for (int i = bodyLength; i > 0; i--) {
+				xPos[i] = xPos[i - 1];
+				yPos[i] = yPos[i - 1];
+	
+				System.out.println("xPos at " + i + ": " + xPos[i] + " yPos at " + i + ": " + yPos[i]);
+			}
+	
+			switch (dir) {
+			case 1:
+				yPos[0] = yPos[0] - SQUARE_SIZE;
+				break;
+			case 2:
+				xPos[0] = xPos[0] + SQUARE_SIZE;
+				break;
+			case 3:
+				yPos[0] = yPos[0] + SQUARE_SIZE;
+				break;
+			case 4:
+				xPos[0] = xPos[0] - SQUARE_SIZE;
+				break;
+			}
 		}
 	}
 
